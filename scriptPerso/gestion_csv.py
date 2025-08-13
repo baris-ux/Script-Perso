@@ -2,7 +2,25 @@ import pandas as pd
 import glob
 
 def consolider_fichiers_csv(dossier_csv, fichier_sortie):
-    """Consolide les fichiers CSV dans un seul fichier."""
+    """Consolide les fichiers CSV dans un seul fichier.
+
+    Préconditions:
+    - dossier_csv existe et contient au moins un fichier csv lisible
+    - Les fichiers CSV sont encodés en UTF-8 et séparés par ';'
+
+    Post :
+    - fichier_sortie est créé 
+    - Les lignes dupliquées ont été **supprimées** (dédoublonnage).
+    - fichier_sortie est créé en UTF-8, séparé par ';'
+    - L'ordre des colonnes est conservé en sorti ;
+
+    Exceptions:
+    - FileNotFoundError : aucun fichier *.csv trouvé dans `dossier_csv`.
+    - ValueError        : tous les *.csv trouvés sont vides.
+    - PermissionError   : écriture impossible dans `fichier_sortie`.
+    
+    
+    """
     fichiers_csv = glob.glob(f"{dossier_csv}/*.csv")
     if not fichiers_csv:
         raise FileNotFoundError("Aucun fichier CSV trouvé dans le dossier spécifié.")
