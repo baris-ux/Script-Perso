@@ -22,6 +22,22 @@ def recherche_produit(nom_produit, fichier_csv):
     return df[df['Nom_du_produit'].str.contains(nom_produit, case=False, na=False)]
 
 def recherche_categorie(nom_categorie, fichier_csv):
+    """
+    Préconditions :
+    - fichier_csv existe et est lisible
+    - Le fichier contient la colonne 'Categorie'
+    - nom_categorie est une chaîne non vide
+
+    Postconditions :
+    - Retourne un pandas.DataFrame (même si vide)
+    - Le DataFrame retourné contient uniquement des lignes dont 'Categorie'
+      correspond au filtre (recherche insensible à la casse)
+
+      
+    Exceptions :
+    - FileNotFoundError : si le fichier CSV est introuvable
+    - KeyError : si la colonne 'Categorie' est absente
+    """
     df = pd.read_csv(fichier_csv, sep=';', encoding='utf-8')
     return df[df['Categorie'].str.contains(nom_categorie, case=False, na=False)]
 
