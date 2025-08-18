@@ -6,7 +6,7 @@ def recherche_produit(nom_produit, fichier_csv):
 
     Préconditions : 
     - fichier_csv existe et est lisible
-     - Le fichier contient la colonne 'Nom_du_produit'
+    - Le fichier contient la colonne 'Nom_du_produit'
     - nom_produit est une chaine non vide
     
     Postconditions : 

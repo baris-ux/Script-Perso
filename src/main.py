@@ -1,87 +1,91 @@
-import argparse
+# src/main.py
 from gestion_csv import consolider_fichiers_csv
 from recherche import recherche_produit, recherche_categorie, filtre_par_prix
 from rapport import generer_rapport
 
-def consolider(dossier, fichier_consolide):
-    consolider_fichiers_csv(dossier, fichier_consolide)
-    print(f"Fichier consolidé dans : {fichier_consolide}")
 
-def rechercher_produit(nom_produit, fichier_consolide):
+def consolider():
+    dossier = input("Chemin du dossier contenant les CSV : ")
+    fichier = input("Nom du fichier de sortie (défaut: base_inventaire.csv) : ") or "base_inventaire.csv"
     try:
-        resultat = recherche_produit(nom_produit, fichier_consolide)
-        if resultat.empty:
-            print(f"Produit '{nom_produit}' introuvable.")
-        else:
-            print(resultat)
-    except FileNotFoundError:
-        print(f"Fichier '{fichier_consolide}' introuvable. Veuillez d'abord consolider les fichiers CSV.")
-    except KeyError:
-        print("La colonne 'Nom_du_produit' est absente du fichier. Vérifiez la structure du fichier CSV.")
-
-def rechercher_categorie(nom_categorie, fichier_consolide):
-    resultat = recherche_categorie(nom_categorie, fichier_consolide)
-    if resultat.empty:
-        print(f"Aucun produit trouvé dans la catégorie '{nom_categorie}'.")
-    else:
-        print(resultat)
-
-def filtrer_prix(prix_min, prix_max, fichier_consolide):
-    if prix_min > prix_max:
-        raise ValueError("Le prix minimum ne peut pas être supérieur au prix maximum.")
-    resultat = filtre_par_prix(prix_min, prix_max, fichier_consolide)
-    if resultat.empty:
-        print(f"Aucun produit trouvé entre {prix_min} et {prix_max}.")
-    else:
-        print(resultat)
-
-def generer(fichier_consolide):
-    try:
-        rapport = generer_rapport(fichier_consolide)
-        print("Rapport généré avec succès :")
-        print(rapport)
-    except FileNotFoundError:
-        print("Fichier consolidé introuvable. Veuillez d'abord consolider les fichiers CSV.")
-
-def main():
-    parser = argparse.ArgumentParser(description="Gestion d'inventaire en ligne de commande.")
-    parser.add_argument("action", choices=["consolider", "rechercher_produit", "rechercher_categorie", "filtrer_prix", "generer"],
-                        help="Action à effectuer.")
-    parser.add_argument("--dossier", help="Chemin du dossier contenant les fichiers CSV (pour 'consolider').")
-    parser.add_argument("--fichier_consolide", default="base_inventaire.csv", help="Chemin du fichier consolidé (par défaut : 'base_inventaire.csv').")
-    parser.add_argument("--nom_produit", help="Nom du produit à rechercher (pour 'rechercher_produit').")
-    parser.add_argument("--nom_categorie", help="Nom de la catégorie à rechercher (pour 'rechercher_categorie').")
-    parser.add_argument("--prix_min", type=float, help="Prix minimum (pour 'filtrer_prix').")
-    parser.add_argument("--prix_max", type=float, help="Prix maximum (pour 'filtrer_prix').")
-
-    args = parser.parse_args()
-
-    try:
-        if args.action == "consolider":
-            if not args.dossier:
-                raise ValueError("L'argument '--dossier' est requis pour 'consolider'.")
-            consolider(args.dossier, args.fichier_consolide)
-
-        elif args.action == "rechercher_produit":
-            if not args.nom_produit:
-                raise ValueError("L'argument '--nom_produit' est requis pour 'rechercher_produit'.")
-            rechercher_produit(args.nom_produit, args.fichier_consolide)
-
-        elif args.action == "rechercher_categorie":
-            if not args.nom_categorie:
-                raise ValueError("L'argument '--nom_categorie' est requis pour 'rechercher_categorie'.")
-            rechercher_categorie(args.nom_categorie, args.fichier_consolide)
-
-        elif args.action == "filtrer_prix":
-            if args.prix_min is None or args.prix_max is None:
-                raise ValueError("Les arguments '--prix_min' et '--prix_max' sont requis pour 'filtrer_prix'.")
-            filtrer_prix(args.prix_min, args.prix_max, args.fichier_consolide)
-
-        elif args.action == "generer":
-            generer(args.fichier_consolide)
-
+        consolider_fichiers_csv(dossier, fichier)
+        print(f"Fichier consolidé dans : {fichier}")
     except Exception as e:
         print(f"Erreur : {e}")
+
+
+def rechercher_produit_menu():
+    fichier = input("Chemin du fichier consolidé : ") or "base_inventaire.csv"
+    nom = input("Nom du produit à rechercher : ")
+    try:
+        res = recherche_produit(nom, fichier)
+        print(res if not res.empty else f"Produit '{nom}' introuvable.")
+    except Exception as e:
+        print(f"Erreur : {e}")
+
+
+def rechercher_categorie_menu():
+    fichier = input("Chemin du fichier consolidé : ") or "base_inventaire.csv"
+    nom = input("Nom de la catégorie : ")
+    try:
+        res = recherche_categorie(nom, fichier)
+        print(res if not res.empty else f"Aucun produit trouvé dans '{nom}'.")
+    except Exception as e:
+        print(f"Erreur : {e}")
+
+
+def filtrer_prix_menu():
+    fichier = input("Chemin du fichier consolidé : ") or "base_inventaire.csv"
+    try:
+        prix_min = float(input("Prix minimum : "))
+        prix_max = float(input("Prix maximum : "))
+        res = filtre_par_prix(prix_min, prix_max, fichier)
+        print(res if not res.empty else f"Aucun produit entre {prix_min} et {prix_max}.")
+    except Exception as e:
+        print(f"Erreur : {e}")
+
+
+def generer():
+    fichier = input("Chemin du fichier consolidé : ") or "base_inventaire.csv"
+    try:
+        rapport = generer_rapport(fichier)
+        print("Rapport généré :")
+        print(rapport)
+    except Exception as e:
+        print(f"Erreur : {e}")
+
+
+def afficher_menu():
+    print("\n=== MENU INVENTAIRE ===")
+    print("1. Consolider les fichiers CSV")
+    print("2. Rechercher un produit")
+    print("3. Rechercher une catégorie")
+    print("4. Filtrer par prix")
+    print("5. Générer un rapport")
+    print("0. Quitter")
+
+
+def main():
+    while True:
+        afficher_menu()
+        choix = input("Choisissez une option : ")
+
+        if choix == "1":
+            consolider()
+        elif choix == "2":
+            rechercher_produit_menu()
+        elif choix == "3":
+            rechercher_categorie_menu()
+        elif choix == "4":
+            filtrer_prix_menu()
+        elif choix == "5":
+            generer()
+        elif choix == "0":
+            print("Au revoir")
+            break
+        else:
+            print("Choix invalide, réessayez.")
+
 
 if __name__ == "__main__":
     main()
