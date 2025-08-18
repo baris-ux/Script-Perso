@@ -4,7 +4,6 @@ from recherche import recherche_produit, recherche_categorie, filtre_par_prix
 from rapport import generer_rapport
 import os
 
-
 def consolider():
     dossier = input("Chemin du dossier contenant les CSV : ")
     fichier = input("Nom du fichier de sortie (défaut: ../data/output/base_inventaire.csv) : ") or "../data/output/base_inventaire.csv"
@@ -73,6 +72,29 @@ def generer():
         print(f"   Valeur tot : {produit['Valeur totale']} €")
 
         print("\n✅ Rapport généré avec succès\n")
+
+
+         # === Export fichier (texte) ===
+        chemin_rapport = input("Chemin du fichier rapport (défaut: ../data/output/rapport_inventaire.txt) : ") or "data/output/rapport_inventaire.txt"
+        os.makedirs(os.path.dirname(chemin_rapport), exist_ok=True)
+
+        with open(chemin_rapport, "w", encoding="utf-8") as f:
+            f.write("=== RAPPORT INVENTAIRE ===\n")
+            f.write("\nQuantité par catégorie :\n")
+            for cat, qte in rapport["quantite_par_categorie"].items():
+                f.write(f"- {cat} : {qte}\n")
+
+            f.write(f"\nValeur totale du stock : {rapport['valeur_totale']} €\n")
+
+            produit = rapport["produit_cher"]
+            f.write("\nProduit le plus cher :\n")
+            f.write(f"- Nom        : {produit['Nom_du_produit']}\n")
+            f.write(f"- Catégorie  : {produit['Categorie']}\n")
+            f.write(f"- Prix       : {produit['Prix unitaire']} €\n")
+            f.write(f"- Quantité   : {produit['Quantite']}\n")
+            f.write(f"- Valeur tot : {produit['Valeur totale']} €\n")
+
+        print(f"📝 Rapport exporté dans : {chemin_rapport}")
 
     except Exception as e:
         print(f"Erreur : {e}")
