@@ -49,10 +49,30 @@ def generer():
     fichier = input("Chemin du fichier consolidé : ") or "base_inventaire.csv"
     try:
         rapport = generer_rapport(fichier)
-        print("Rapport généré :")
-        print(rapport)
+        print("\n=== 📊 RAPPORT INVENTAIRE ===")
+
+        # Quantité par catégorie
+        print("\n🔹 Quantité par catégorie :")
+        for cat, qte in rapport["quantite_par_categorie"].items():
+            print(f"   - {cat} : {qte}")
+
+        # Valeur totale
+        print(f"\n💰 Valeur totale du stock : {rapport['valeur_totale']} €")
+
+        # Produit le plus cher
+        produit = rapport["produit_cher"]
+        print("\n🏆 Produit le plus cher :")
+        print(f"   Nom        : {produit['Nom_du_produit']}")
+        print(f"   Catégorie  : {produit['Categorie']}")
+        print(f"   Prix       : {produit['Prix unitaire']} €")
+        print(f"   Quantité   : {produit['Quantite']}")
+        print(f"   Valeur tot : {produit['Valeur totale']} €")
+
+        print("\n✅ Rapport généré avec succès\n")
+
     except Exception as e:
         print(f"Erreur : {e}")
+
 
 
 def afficher_menu():
