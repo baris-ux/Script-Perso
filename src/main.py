@@ -3,14 +3,28 @@ from gestion_csv import consolider_fichiers_csv
 from recherche import recherche_produit, recherche_categorie, filtre_par_prix
 from rapport import generer_rapport
 import os
+from pathlib import Path
+
+# Répertoire racine du projet (là où se trouve main.py)
+BASE_DIR = Path(__file__).resolve().parent.parent  # "Script-Perso"
+
+# Dossier de sortie
+OUTPUT_DIR = BASE_DIR / "data" / "output"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+def project_path(path: str) -> str:
+    """Retourne un chemin absolu basé sur la racine du projet."""
+    return str(path) if os.path.isabs(path) else str((BASE_DIR / path).resolve())
 
 def consolider():
-    dossier = input("Chemin du dossier contenant les CSV : ")
-    fichier = input("Nom du fichier de sortie (défaut: ../data/output/base_inventaire.csv) : ") or "../data/output/base_inventaire.csv"
+    dossier = input("Chemin du dossier contenant les CSV : ") or "data/input"
+    fichier = input("Nom du fichier de sortie (défaut: data/output/base_inventaire.csv) : ") or "data/output/base_inventaire.csv"
+
+    dossier = project_path(dossier)
+    fichier = project_path(fichier)
+
     try:
-        dirpath = os.path.dirname(fichier)
-        if dirpath:  # éviter le bug si aucun dossier n’est donné
-            os.makedirs(dirpath, exist_ok=True)
+        os.makedirs(os.path.dirname(fichier), exist_ok=True)
         consolider_fichiers_csv(dossier, fichier)
         print(f"Fichier consolidé dans : {fichier}")
     except Exception as e:
@@ -18,7 +32,7 @@ def consolider():
 
 
 def rechercher_produit_menu():
-    fichier = input("Chemin du fichier consolidé : ") or "../data/output/base_inventaire.csv"
+    fichier = project_path(input("Chemin du fichier consolidé : ") or "data/output/base_inventaire.csv")
     nom = input("Nom du produit à rechercher : ")
     try:
         res = recherche_produit(nom, fichier)
@@ -28,7 +42,7 @@ def rechercher_produit_menu():
 
 
 def rechercher_categorie_menu():
-    fichier = input("Chemin du fichier consolidé : ") or "../data/output/base_inventaire.csv"
+    fichier = project_path(input("Chemin du fichier consolidé : ") or "data/output/base_inventaire.csv")
     nom = input("Nom de la catégorie : ")
     try:
         res = recherche_categorie(nom, fichier)
@@ -38,7 +52,7 @@ def rechercher_categorie_menu():
 
 
 def filtrer_prix_menu():
-    fichier = input("Chemin du fichier consolidé : ") or "../data/output/base_inventaire.csv"
+    fichier = project_path(input("Chemin du fichier consolidé : ") or "data/output/base_inventaire.csv")
     try:
         prix_min = float(input("Prix minimum : "))
         prix_max = float(input("Prix maximum : "))
@@ -49,7 +63,7 @@ def filtrer_prix_menu():
 
 
 def generer():
-    fichier = input("Chemin du fichier consolidé : ") or "../data/output/base_inventaire.csv"
+    fichier = project_path(input("Chemin du fichier consolidé : ") or "data/output/base_inventaire.csv")
     try:
         rapport = generer_rapport(fichier)
         print("\n=== 📊 RAPPORT INVENTAIRE ===")
@@ -75,7 +89,10 @@ def generer():
 
 
          # === Export fichier (texte) ===
-        chemin_rapport = input("Chemin du fichier rapport (défaut: ../data/output/rapport_inventaire.txt) : ") or "data/output/rapport_inventaire.txt"
+        chemin_rapport = project_path(
+            input("Chemin du fichier rapport (défaut: data/output/rapport_inventaire.txt) : ")
+            or "data/output/rapport_inventaire.txt"
+        )
         os.makedirs(os.path.dirname(chemin_rapport), exist_ok=True)
 
         with open(chemin_rapport, "w", encoding="utf-8") as f:
