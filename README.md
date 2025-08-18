@@ -18,8 +18,3 @@ ScriptPerso est un outil de gestion d'inventaire basé sur des fichiers CSV. Il 
 - **Python 3.x**
 - Bibliothèques Python :
   - `pandas`
-
-
-## la vidéo explication
-- comme la vidéo était trop grande pour mettre sur github (meme en 7z) je vous fournis le lien youtube ci dessous
-- https://www.youtube.com/watch?v=qbSe8fBKnks
