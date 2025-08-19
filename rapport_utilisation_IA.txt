@@ -13,3 +13,5 @@ aussi j'ai utilisé l'IA pour comprendre un maximum le code qu'il me générait.
 
 Une des autres utilisations de l'IA était lorsque j'ai copié collé certain extrait de la consigne 
 que j'ai demandé d'analyser pour être sur que ce que je faisait était ce qu'attendait le prof de moi
+
+utilisation de l'IA à la rédaction d'un fichier Readme adapté

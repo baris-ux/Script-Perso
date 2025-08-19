@@ -22,11 +22,11 @@ def generer_rapport(fichier_csv):
     - FileNotFoundError : fichier introuvable
     - KeyError : colonnes attendues manquantes
     """
-    df = pd.read_csv(fichier_csv, sep=';', encoding='utf-8')
+    df = pd.read_csv(fichier_csv, sep=';', encoding='utf-8') # on lit le fihier csv qui est un texte brute séparé par des ; et on les transforme en table en 2d (structuré en colonne et lignes) grâce a panda
     quantite_par_categorie = df.groupby("Categorie")["Quantite"].sum()
     df['Valeur totale'] = df['Quantite'] * df['Prix unitaire']
     valeur_totale = df['Valeur totale'].sum()
-    produit_cher = df.loc[df['Prix unitaire'].idxmax()]
+    produit_cher = df.loc[df['Prix unitaire'].idxmax()] # on trouve l'index de la ligne ou le prix unitaire est le plus éleve avec .idmax et on récupère tout la ligne avec df.loc
     return {
         "quantite_par_categorie": quantite_par_categorie,
         "valeur_totale": valeur_totale,
