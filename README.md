@@ -5,6 +5,10 @@ Il permet de consolider les fichiers de données, de rechercher des produits ou 
 
 ---
 
+## vidéo de démo
+
+https://www.youtube.com/watch?v=gFHMQWQO1-M
+
 ## Fonctionnalités
 
 - **Consolidation des fichiers CSV** : fusionne plusieurs fichiers CSV en un seul fichier, avec suppression des doublons.  
